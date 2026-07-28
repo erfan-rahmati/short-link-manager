@@ -2,7 +2,15 @@
 
 import { auth } from "@/lib/auth";
 
-export async function signInAction(formData: FormData) {
+type AuthState = {
+  success: boolean;
+  error?: string;
+};
+
+export async function signInAction(
+  _prevState: AuthState,
+  formData: FormData
+): Promise<AuthState> {
   const email = formData.get("email");
   const password = formData.get("password");
 
@@ -11,6 +19,7 @@ export async function signInAction(formData: FormData) {
     typeof password !== "string"
   ) {
     return {
+      success: false,
       error: "Invalid credentials",
     };
   }
@@ -22,6 +31,7 @@ export async function signInAction(formData: FormData) {
 
   if (error) {
     return {
+      success: false,
       error: "Login failed",
     };
   }
@@ -33,8 +43,10 @@ export async function signInAction(formData: FormData) {
 
 
 export async function signUpAction(
+  _prevState: AuthState,
   formData: FormData
-) {
+): Promise<AuthState> {
+
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
   const name = String(formData.get("name"));
@@ -47,6 +59,7 @@ export async function signUpAction(
 
   if (error) {
     return {
+      success: false,
       error: "Signup failed",
     };
   }
