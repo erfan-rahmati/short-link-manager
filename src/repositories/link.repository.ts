@@ -36,3 +36,9 @@ export async function getLinksByUser(userId: string) {
 export async function deleteLink(id: string) {
   await db.delete(links).where(eq(links.id, id));
 }
+
+export async function slugExists(slug: string) {
+  const link = await getLinkBySlug(slug);
+
+  return link !== null;
+}
