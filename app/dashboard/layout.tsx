@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
-
-import { auth } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/session";
+import { DashboardHeader } from "@/components/dashboard-navbar";
 
 
 export default async function DashboardLayout({
@@ -9,19 +8,18 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
 
-
-  const session =
-    await auth.getSession();
-
-
-  if (!session.data?.user) {
-    redirect("/login");
-  }
+  await getCurrentUser();
 
 
   return (
-    <>
-      {children}
-    </>
+    <div className="min-h-screen">
+
+      <DashboardHeader />
+
+      <main>
+        {children}
+      </main>
+
+    </div>
   );
 }

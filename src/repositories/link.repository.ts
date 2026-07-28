@@ -1,8 +1,7 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { db } from "@/src/db";
 import { links } from "@/src/db/schema";
-
 
 export async function createLink(data: {
   userId: string;
@@ -82,4 +81,26 @@ export async function slugExists(
 
   return link !== null;
 
+}
+
+export async function getLinksByUserId(
+  userId: string
+) {
+  return db.query.links.findMany({
+    where: (links, { eq }) =>
+      eq(links.userId, userId),
+
+    orderBy: (links, { desc }) => [
+      desc(links.createdAt),
+    ],
+  });
+}
+
+export async function incrementLinkClicks(id: string) {
+  await db
+    .update(links)
+    .set({
+      clickCount: sql`${links.clickCount} + 1`,
+    })
+    .where(eq(links.id, id));
 }

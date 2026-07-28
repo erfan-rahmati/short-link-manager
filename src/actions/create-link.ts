@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import {
   createLink,
@@ -121,17 +122,5 @@ export async function createLinkAction(
 
 
 
-  return {
-
-    success: true,
-
-    message:
-      "Link created successfully",
-
-    errors: {},
-
-    link,
-
-  };
-
+    redirect("/dashboard");
 }
