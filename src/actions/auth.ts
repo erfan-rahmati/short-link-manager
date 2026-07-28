@@ -1,8 +1,9 @@
 "use server";
 
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-type AuthState = {
+export type AuthState = {
   success: boolean;
   error?: string;
 };
@@ -30,15 +31,15 @@ export async function signInAction(
   });
 
   if (error) {
-    return {
-      success: false,
-      error: "Login failed",
-    };
-  }
+  console.error("SIGNUP ERROR:", error);
 
   return {
-    success: true,
+    success: false,
+    error: error.message ?? "Signup failed",
   };
+}
+
+  redirect("/dashboard");
 }
 
 
@@ -64,7 +65,5 @@ export async function signUpAction(
     };
   }
 
-  return {
-    success: true,
-  };
+  redirect("/dashboard");
 }

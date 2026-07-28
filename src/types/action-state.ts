@@ -1,10 +1,15 @@
 export type CreateLinkActionState = {
   success: boolean;
+
+  message?: string;
+
   errors: {
     destinationUrl?: string[];
     slug?: string[];
     title?: string[];
+    general?: string[];
   };
+
   link: {
     id: string;
     userId: string;

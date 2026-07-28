@@ -1,5 +1,7 @@
 "use server";
-import type { CreateLinkActionState } from "@/src/types/action-state";
+
+import { auth } from "@/lib/auth";
+
 import {
   createLink,
   slugExists,
@@ -7,44 +9,129 @@ import {
 
 import { createLinkSchema } from "@/src/schemas/link.schema";
 
+import type {
+  CreateLinkActionState,
+} from "@/src/types/action-state";
+
+
 export async function createLinkAction(
   _prevState: CreateLinkActionState,
   formData: FormData
 ): Promise<CreateLinkActionState> {
-  const parsed = createLinkSchema.safeParse({
-    destinationUrl: formData.get("destinationUrl"),
-    slug: formData.get("slug"),
-    title: formData.get("title"),
-  });
+
+  console.log("CREATE LINK ACTION STARTED");
+  const session = await auth.getSession();
+
+
+  if (!session.data?.user) {
+
+    return {
+      success: false,
+
+      message: "You must be logged in",
+
+      errors: {
+        general: [
+          "Please login first",
+        ],
+      },
+
+      link: null,
+    };
+
+  }
+
+
+
+  const parsed =
+    createLinkSchema.safeParse({
+
+      destinationUrl:
+        formData.get("destinationUrl"),
+
+      slug:
+        formData.get("slug"),
+
+      title:
+        formData.get("title"),
+
+    });
+
+
 
   if (!parsed.success) {
+
     return {
+
       success: false,
-      errors: parsed.error.flatten().fieldErrors,
+
+      message: "Invalid input",
+
+      errors:
+        parsed.error.flatten().fieldErrors,
+
       link: null,
+
     };
+
   }
 
-  if (await slugExists(parsed.data.slug)) {
+
+
+
+  const exists =
+    await slugExists(parsed.data.slug);
+
+
+
+  if (exists) {
+
     return {
+
       success: false,
+
+      message: "Slug already exists",
+
       errors: {
-        slug: ["Slug already exists"],
+
+        slug: [
+          "This slug is already used",
+        ],
+
       },
+
       link: null,
+
     };
+
   }
 
-  const userId = "demo-user";
 
-  const link = await createLink({
-    userId,
-    ...parsed.data,
-  });
+
+
+  const link =
+    await createLink({
+
+      userId:
+        session.data.user.id,
+
+      ...parsed.data,
+
+    });
+
+
 
   return {
+
     success: true,
+
+    message:
+      "Link created successfully",
+
     errors: {},
+
     link,
+
   };
+
 }
