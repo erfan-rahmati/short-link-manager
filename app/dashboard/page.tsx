@@ -4,6 +4,8 @@ import { getLinksByUserId } from "@/src/repositories/link.repository";
 
 import { LogoutButton } from "@/components/logout-button";
 
+import { DeleteLinkButton } from "@/components/delete-link-button";
+
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
@@ -63,6 +65,7 @@ export default async function DashboardPage() {
               </p>
 
               <p className="text-sm">Clicks: {link.clickCount}</p>
+              <DeleteLinkButton id={link.id} />
             </div>
           ))
         )}

@@ -104,3 +104,13 @@ export async function incrementLinkClicks(id: string) {
     })
     .where(eq(links.id, id));
 }
+
+export async function getLinkById(id: string) {
+  const [link] = await db
+    .select()
+    .from(links)
+    .where(eq(links.id, id));
+
+
+  return link ?? null;
+}
