@@ -1,0 +1,38 @@
+import { eq } from "drizzle-orm";
+
+import { db } from "@/src/db";
+import { links } from "@/src/db/schema";
+
+export async function createLink(data: {
+  userId: string;
+  slug: string;
+  destinationUrl: string;
+  title?: string;
+}) {
+  const [link] = await db
+    .insert(links)
+    .values(data)
+    .returning();
+
+  return link;
+}
+
+export async function getLinkBySlug(slug: string) {
+  const [link] = await db
+    .select()
+    .from(links)
+    .where(eq(links.slug, slug));
+
+  return link ?? null;
+}
+
+export async function getLinksByUser(userId: string) {
+  return db
+    .select()
+    .from(links)
+    .where(eq(links.userId, userId));
+}
+
+export async function deleteLink(id: string) {
+  await db.delete(links).where(eq(links.id, id));
+}

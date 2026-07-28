@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTable,
   text,
@@ -18,6 +19,12 @@ export const links = pgTable("links", {
   title: text("title"),
 
   clickCount: integer("click_count").default(0).notNull(),
+
+  isActive: boolean("is_active").default(true).notNull(),
+
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+  }),
 
   createdAt: timestamp("created_at", {
     withTimezone: true,
