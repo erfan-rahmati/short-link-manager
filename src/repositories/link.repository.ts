@@ -42,3 +42,10 @@ export async function slugExists(slug: string) {
 
   return link !== null;
 }
+
+export async function getLinksByUserId(userId: string) {
+  return db.query.links.findMany({
+    where: (links, { eq }) => eq(links.userId, userId),
+    orderBy: (links, { desc }) => [desc(links.createdAt)],
+  });
+}
