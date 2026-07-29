@@ -33,7 +33,7 @@ type LinkCardProps = {
 export function LinkCard({ link }: LinkCardProps) {
   const shortUrl = `${
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-  }/${link.slug}`;
+  }/r/${link.slug}`;
 
   return (
     <Card

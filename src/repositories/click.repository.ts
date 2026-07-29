@@ -157,3 +157,77 @@ export async function createClickEvent(
     return event;
 
 }
+
+export async function getLinkClickStats(
+    linkId: string,
+    days = 7
+) {
+    const startDate = new Date();
+
+    startDate.setDate(
+        startDate.getDate() - days
+    );
+
+
+    const clicks = await db
+        .select({
+            clickedAt: clickEvents.clickedAt,
+        })
+        .from(clickEvents)
+        .where(
+            and(
+                eq(clickEvents.linkId, linkId),
+                gte(
+                    clickEvents.clickedAt,
+                    startDate
+                )
+            )
+        );
+
+
+    const grouped =
+        clicks.reduce<Record<string, number>>(
+            (acc, item) => {
+
+                const date =
+                    item.clickedAt
+                        .toISOString()
+                        .split("T")[0];
+
+
+                acc[date] =
+                    (acc[date] ?? 0) + 1;
+
+
+                return acc;
+
+            },
+            {}
+        );
+
+
+    return Array.from(
+        { length: days },
+        (_, index) => {
+
+            const date = new Date();
+
+            date.setDate(
+                date.getDate() - index
+            );
+
+
+            const key =
+                date
+                    .toISOString()
+                    .split("T")[0];
+
+
+            return {
+                date: key,
+                clicks: grouped[key] ?? 0,
+            };
+
+        }
+    ).reverse();
+}
