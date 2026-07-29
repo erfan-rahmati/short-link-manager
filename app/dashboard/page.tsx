@@ -2,74 +2,48 @@ import { getCurrentUser } from "@/lib/session";
 
 import { getLinksByUserId } from "@/src/repositories/link.repository";
 
-import { LogoutButton } from "@/components/logout-button";
+import { getRecentUserClickStats } from "@/src/repositories/click.repository";
 
-import { DeleteLinkButton } from "@/components/delete-link-button";
+import { DashboardHero } from "@/components/dashboard/dashboard-hero";
+
+import { DashboardStats } from "@/components/dashboard/dashboard-stats";
+
+import { LinksList } from "@/components/dashboard/links-list";
+
+import { LinkClickChart } from "@/components/dashboard/chart/link-click-chart";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
   const links = await getLinksByUserId(user.id);
 
+  const clickStats = await getRecentUserClickStats(user.id);
+
+  const totalClicks = links.reduce((sum, link) => sum + link.clickCount, 0);
+
+  const activeLinks = links.filter((link) => link.isActive).length;
+
   return (
-    <main className="mx-auto max-w-5xl p-8">
-      <div
-        className="
-        mb-8
-        flex
-        flex-col
-        gap-4
-        sm:flex-row
-        sm:items-center
-        sm:justify-between
+    <main
+      className="
+        mx-auto
+        max-w-6xl
+        space-y-10
+        p-6
+        md:p-8
       "
-      >
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+    >
+      <DashboardHero name={user.name} />
 
-          <p className="mt-2 text-muted-foreground">Manage your short links</p>
+      <DashboardStats
+        totalLinks={links.length}
+        totalClicks={totalClicks}
+        activeLinks={activeLinks}
+      />
 
-          <p className="mt-1 text-sm text-muted-foreground">
-            Welcome back, {user.name}
-          </p>
-        </div>
+      <LinkClickChart data={clickStats} />
 
-        <LogoutButton />
-      </div>
-
-      <div className="space-y-4">
-        {links.length === 0 ? (
-          <p className="text-muted-foreground">No links yet.</p>
-        ) : (
-          links.map((link) => (
-            <div
-              key={link.id}
-              className="
-                  rounded-lg
-                  border
-                  p-5
-                  space-y-2
-                "
-            >
-              <h2 className="font-semibold">{link.title || link.slug}</h2>
-
-              <p className="text-sm text-muted-foreground">/{link.slug}</p>
-
-              <p
-                className="
-                  text-sm
-                  break-all
-                "
-              >
-                {link.destinationUrl}
-              </p>
-
-              <p className="text-sm">Clicks: {link.clickCount}</p>
-              <DeleteLinkButton id={link.id} />
-            </div>
-          ))
-        )}
-      </div>
+      <LinksList links={links} />
     </main>
   );
 }

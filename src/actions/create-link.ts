@@ -1,7 +1,8 @@
 "use server";
 
+import { nanoid } from "nanoid";
+
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 import {
   createLink,
@@ -20,107 +21,115 @@ export async function createLinkAction(
   formData: FormData
 ): Promise<CreateLinkActionState> {
 
-  console.log("CREATE LINK ACTION STARTED");
   const session = await auth.getSession();
 
 
   if (!session.data?.user) {
-
     return {
       success: false,
-
-      message: "You must be logged in",
-
+      message: "لطفاً ابتدا وارد حساب کاربری شوید.",
       errors: {
         general: [
-          "Please login first",
+          "برای ساخت لینک باید وارد حساب شوید.",
         ],
       },
-
-      link: null,
+      data: null,
     };
-
   }
 
+
+  const rawSlug =
+    String(formData.get("slug") ?? "").trim();
+
+
+  const slug =
+    rawSlug || nanoid(6);
+
+
+  const rawData = {
+    destinationUrl:
+      String(formData.get("destinationUrl") ?? "").trim(),
+
+    slug,
+
+    title:
+      String(formData.get("title") ?? "").trim() || undefined,
+  };
 
 
   const parsed =
-    createLinkSchema.safeParse({
-
-      destinationUrl:
-        formData.get("destinationUrl"),
-
-      slug:
-        formData.get("slug"),
-
-      title:
-        formData.get("title"),
-
-    });
-
+    createLinkSchema.safeParse(rawData);
 
 
   if (!parsed.success) {
-
     return {
-
       success: false,
-
-      message: "Invalid input",
-
+      message: "اطلاعات وارد شده صحیح نیست.",
       errors:
         parsed.error.flatten().fieldErrors,
-
-      link: null,
-
+      data: null,
     };
-
   }
-
-
 
 
   const exists =
-    await slugExists(parsed.data.slug);
-
+    await slugExists(slug);
 
 
   if (exists) {
-
     return {
-
       success: false,
-
-      message: "Slug already exists",
-
+      message:
+        "این نام کوتاه قبلاً استفاده شده است.",
       errors: {
-
         slug: [
-          "This slug is already used",
+          "لطفاً یک نام کوتاه دیگر انتخاب کنید.",
         ],
-
       },
-
-      link: null,
-
+      data: null,
     };
-
   }
 
 
+  try {
+
+    const link =
+      await createLink({
+        userId:
+          session.data.user.id,
+
+        slug,
+
+        destinationUrl:
+          parsed.data.destinationUrl,
+
+        title:
+          parsed.data.title,
+      });
 
 
-  const link =
-    await createLink({
-
-      userId:
-        session.data.user.id,
-
-      ...parsed.data,
-
-    });
+    return {
+      success: true,
+      message:
+        "لینک با موفقیت ساخته شد.",
+      errors: {},
+      data: link,
+    };
 
 
+  } catch {
 
-    redirect("/dashboard");
+    return {
+      success: false,
+      message:
+        "ساخت لینک انجام نشد.",
+      errors: {
+        general: [
+          "خطای غیرمنتظره‌ای رخ داد. دوباره تلاش کنید.",
+        ],
+      },
+      data: null,
+    };
+
+  }
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useTransition } from "react";
+
 import { logoutAction } from "@/src/actions/logout";
+
 import { Button } from "@/components/ui/button";
 
 export function LogoutButton() {
@@ -16,8 +18,19 @@ export function LogoutButton() {
   }
 
   return (
-    <Button onClick={handleLogout} disabled={pending} variant="outline">
-      {pending ? "Logging out..." : "Logout"}
+    <Button
+      onClick={handleLogout}
+      disabled={pending}
+      variant="outline"
+      className="
+        w-full
+        justify-start
+        text-destructive
+        hover:bg-destructive/10
+        hover:text-destructive
+      "
+    >
+      {pending ? "در حال خروج..." : "خروج"}
     </Button>
   );
 }

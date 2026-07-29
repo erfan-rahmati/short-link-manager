@@ -1,23 +1,57 @@
 import { z } from "zod";
 
+
 export const createLinkSchema = z.object({
-  destinationUrl: z.url("Please enter a valid URL"),
+
+  destinationUrl: z
+    .string()
+    .trim()
+    .url(
+      "لینک وارد شده معتبر نیست."
+    )
+    .refine(
+      (value) =>
+        value.startsWith("http://") ||
+        value.startsWith("https://"),
+      "لینک باید با http یا https شروع شود."
+    ),
+
+
 
   slug: z
     .string()
     .trim()
-    .min(3, "Slug must be at least 3 characters")
-    .max(50, "Slug must be at most 50 characters")
+    .max(
+      50,
+      "شناسه کوتاه نمی‌تواند بیشتر از ۵۰ کاراکتر باشد."
+    )
     .regex(
-      /^[a-zA-Z0-9-_]+$/,
-      "Slug can only contain letters, numbers, hyphens and underscores"
-    ),
+      /^[a-zA-Z0-9-]*$/,
+      "شناسه کوتاه فقط شامل حروف انگلیسی، عدد و خط تیره است."
+    )
+    .transform(
+      (value) =>
+        value === "" ? undefined : value
+    )
+    .optional(),
+
+
 
   title: z
     .string()
     .trim()
-    .max(100)
+    .max(
+      100,
+      "عنوان نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد."
+    )
+    .transform(
+      (value) =>
+        value === "" ? undefined : value
+    )
     .optional(),
+
 });
 
-export type CreateLinkInput = z.infer<typeof createLinkSchema>;
+
+export type CreateLinkInput =
+  z.infer<typeof createLinkSchema>;

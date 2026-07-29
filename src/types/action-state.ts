@@ -10,7 +10,7 @@ export type CreateLinkActionState = {
     general?: string[];
   };
 
-  link: {
+  data?: {
     id: string;
     userId: string;
     slug: string;

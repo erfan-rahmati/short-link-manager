@@ -1,25 +1,19 @@
 import { getCurrentUser } from "@/lib/session";
-import { DashboardHeader } from "@/components/dashboard-navbar";
 
+import { DashboardNavbar } from "@/components/dashboard/dashboard-navbar";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
-  await getCurrentUser();
-
+  const user = await getCurrentUser();
 
   return (
     <div className="min-h-screen">
+      <DashboardNavbar user={user} />
 
-      <DashboardHeader />
-
-      <main>
-        {children}
-      </main>
-
+      <main>{children}</main>
     </div>
   );
 }
