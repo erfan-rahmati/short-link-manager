@@ -30,97 +30,77 @@ export async function signInAction(
   formData: FormData
 ): Promise<AuthState> {
 
-
   const parsed = signinSchema.safeParse({
-
     email: formData.get("email"),
-
     password: formData.get("password"),
-
   });
 
 
-
   if (!parsed.success) {
-
     return {
-
       success: false,
-
-      message:
-        "اطلاعات وارد شده صحیح نیست.",
-
-      errors:
-        parsed.error.flatten().fieldErrors,
-
+      message: "اطلاعات وارد شده صحیح نیست.",
+      errors: parsed.error.flatten().fieldErrors,
     };
-
   }
-
 
 
   try {
 
-    const result =
-      await auth.signIn.email({
-        email: parsed.data.email,
-        password: parsed.data.password,
-      });
-
-    console.log("LOGIN RESULT:", result);
-
-    const { error } = result;
+    const result = await auth.signIn.email({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
 
 
-    if (error) {
+    console.log(
+      "LOGIN RESULT:",
+      JSON.stringify(result, null, 2)
+    );
+
+
+    if (result.error) {
 
       return {
-
         success: false,
-
-        message:
-          "ورود انجام نشد.",
-
+        message: "ورود انجام نشد.",
         errors: {
-
           general: [
+            result.error.message ??
             "ایمیل یا رمز عبور اشتباه است.",
           ],
-
         },
-
       };
 
     }
 
 
+  } catch (error) {
 
-  } catch {
+    console.error(
+      "LOGIN ERROR:",
+      error
+    );
+
 
     return {
-
       success: false,
-
-      message:
-        "خطایی هنگام ورود رخ داد.",
-
+      message: "خطایی هنگام ورود رخ داد.",
       errors: {
-
         general: [
           "لطفاً دوباره تلاش کنید.",
         ],
-
       },
-
     };
 
   }
 
 
-
   redirect("/dashboard");
 
 }
+
+
 
 
 
@@ -131,18 +111,10 @@ export async function signUpAction(
 ): Promise<AuthState> {
 
 
-
   const parsed = signupSchema.safeParse({
-
-    name:
-      formData.get("name"),
-
-    email:
-      formData.get("email"),
-
-    password:
-      formData.get("password"),
-
+    name: formData.get("name"),
+    email: formData.get("email"),
+    password: formData.get("password"),
   });
 
 
@@ -150,15 +122,9 @@ export async function signUpAction(
   if (!parsed.success) {
 
     return {
-
       success: false,
-
-      message:
-        "اطلاعات ثبت نام صحیح نیست.",
-
-      errors:
-        parsed.error.flatten().fieldErrors,
-
+      message: "اطلاعات ثبت نام صحیح نیست.",
+      errors: parsed.error.flatten().fieldErrors,
     };
 
   }
@@ -168,32 +134,40 @@ export async function signUpAction(
   try {
 
 
-    const result =
-      await auth.signUp.email({
-        email: parsed.data.email,
-        password: parsed.data.password,
-        name: parsed.data.name,
-      });
+    const result = await auth.signUp.email({
 
-    console.log("SIGNUP RESULT:", result);
+      email: parsed.data.email,
 
-    const { error } = result;
+      password: parsed.data.password,
 
+      name: parsed.data.name,
+
+    });
 
 
-    if (error) {
+
+    console.log(
+      "SIGNUP RESULT:",
+      JSON.stringify(result, null, 2)
+    );
+
+
+
+    if (result.error) {
 
       return {
 
         success: false,
 
-        message:
-          "ثبت نام انجام نشد.",
+        message: "ثبت نام انجام نشد.",
 
         errors: {
 
           general: [
+
+            result.error.message ??
             "این ایمیل قبلاً استفاده شده یا امکان ثبت نام وجود ندارد.",
+
           ],
 
         },
@@ -204,7 +178,14 @@ export async function signUpAction(
 
 
 
-  } catch {
+  } catch (error) {
+
+
+    console.error(
+      "SIGNUP ERROR:",
+      error
+    );
+
 
     return {
 
@@ -216,7 +197,9 @@ export async function signUpAction(
       errors: {
 
         general: [
+
           "لطفاً دوباره تلاش کنید.",
+
         ],
 
       },
