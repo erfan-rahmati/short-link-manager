@@ -61,17 +61,15 @@ export async function signInAction(
 
   try {
 
-    const { error } =
+    const result =
       await auth.signIn.email({
-
-        email:
-          parsed.data.email,
-
-        password:
-          parsed.data.password,
-
+        email: parsed.data.email,
+        password: parsed.data.password,
       });
 
+    console.log("LOGIN RESULT:", result);
+
+    const { error } = result;
 
 
     if (error) {
@@ -170,19 +168,16 @@ export async function signUpAction(
   try {
 
 
-    const { error } =
+    const result =
       await auth.signUp.email({
-
-        email:
-          parsed.data.email,
-
-        password:
-          parsed.data.password,
-
-        name:
-          parsed.data.name,
-
+        email: parsed.data.email,
+        password: parsed.data.password,
+        name: parsed.data.name,
       });
+
+    console.log("SIGNUP RESULT:", result);
+
+    const { error } = result;
 
 
 
