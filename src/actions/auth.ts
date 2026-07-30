@@ -53,12 +53,6 @@ export async function signInAction(
     });
 
 
-    console.log(
-      "LOGIN RESULT:",
-      JSON.stringify(result, null, 2)
-    );
-
-
     if (result.error) {
 
       return {
@@ -76,11 +70,6 @@ export async function signInAction(
 
 
   } catch (error) {
-
-    console.error(
-      "LOGIN ERROR:",
-      error
-    );
 
 
     return {
@@ -145,14 +134,6 @@ export async function signUpAction(
     });
 
 
-
-    console.log(
-      "SIGNUP RESULT:",
-      JSON.stringify(result, null, 2)
-    );
-
-
-
     if (result.error) {
 
       return {
@@ -179,12 +160,6 @@ export async function signUpAction(
 
 
   } catch (error) {
-
-
-    console.error(
-      "SIGNUP ERROR:",
-      error
-    );
 
 
     return {
