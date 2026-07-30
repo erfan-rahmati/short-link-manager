@@ -3,6 +3,7 @@ import {
   MousePointerClick,
   CalendarDays,
   Link2,
+  Eye,
   Pencil,
 } from "lucide-react";
 
@@ -89,19 +90,38 @@ export function LinkCard({ link }: LinkCardProps) {
               gap-1
             "
           >
+            {/* Details */}
+
+            <Link href={`/dashboard/links/${link.id}`}>
+              <Button
+                size="icon"
+                variant="ghost"
+                aria-label="مشاهده جزئیات لینک"
+              >
+                <Eye size={18} />
+              </Button>
+            </Link>
+
+            {/* Edit */}
+
             <Link href={`/dashboard/links/${link.id}/edit`}>
               <Button size="icon" variant="ghost" aria-label="ویرایش لینک">
                 <Pencil size={18} />
               </Button>
             </Link>
 
+            {/* Open destination */}
+
             <a
               href={link.destinationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="باز کردن لینک مقصد"
             >
-              <Button size="icon" variant="ghost">
+              <Button
+                size="icon"
+                variant="ghost"
+                aria-label="باز کردن لینک مقصد"
+              >
                 <ExternalLink size={18} />
               </Button>
             </a>

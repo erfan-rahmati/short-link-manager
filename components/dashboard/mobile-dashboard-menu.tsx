@@ -10,12 +10,21 @@ import { Button } from "@/components/ui/button";
 
 import { LogoutButton } from "@/components/logout-button";
 
+import { ThemeToggle } from "@/components/theme-toggle";
+
 export function MobileDashboardMenu() {
   return (
     <div className="md:hidden">
       <Sheet>
         <SheetTrigger
-          render={<Button variant="ghost" size="icon" className="rounded-xl" />}
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-xl"
+              aria-label="باز کردن منو"
+            />
+          }
         >
           <Menu size={22} />
         </SheetTrigger>
@@ -110,6 +119,29 @@ export function MobileDashboardMenu() {
                   ساخت لینک
                 </Button>
               </Link>
+
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                  rounded-xl
+                  border
+                  px-3
+                  py-2
+                "
+              >
+                <span
+                  className="
+                    text-sm
+                    text-muted-foreground
+                  "
+                >
+                  تغییر حالت نمایش
+                </span>
+
+                <ThemeToggle />
+              </div>
             </div>
 
             <div

@@ -8,6 +8,13 @@ import {
 } from "@/src/db/schema";
 
 
+function formatPersianDate(date: Date) {
+    return new Intl.DateTimeFormat("fa-IR", {
+        month: "short",
+        day: "numeric",
+    }).format(date);
+}
+
 export async function getUserClickStats(
     userId: string
 ) {
@@ -29,10 +36,7 @@ export async function getUserClickStats(
         clicks.reduce<Record<string, number>>(
             (acc, item) => {
 
-                const date =
-                    item.clickedAt
-                        .toISOString()
-                        .split("T")[0];
+                const date = formatPersianDate(item.clickedAt);
 
 
                 acc[date] =
@@ -95,10 +99,7 @@ export async function getRecentUserClickStats(
         clicks.reduce<Record<string, number>>(
             (acc, item) => {
 
-                const date =
-                    item.clickedAt
-                        .toISOString()
-                        .split("T")[0];
+                const date = formatPersianDate(item.clickedAt);
 
 
                 acc[date] =
@@ -123,10 +124,7 @@ export async function getRecentUserClickStats(
             );
 
 
-            const key =
-                date
-                    .toISOString()
-                    .split("T")[0];
+            const key = formatPersianDate(date);
 
 
             return {
@@ -189,10 +187,7 @@ export async function getLinkClickStats(
         clicks.reduce<Record<string, number>>(
             (acc, item) => {
 
-                const date =
-                    item.clickedAt
-                        .toISOString()
-                        .split("T")[0];
+                const date = formatPersianDate(item.clickedAt);
 
 
                 acc[date] =
@@ -217,10 +212,7 @@ export async function getLinkClickStats(
             );
 
 
-            const key =
-                date
-                    .toISOString()
-                    .split("T")[0];
+            const key = formatPersianDate(date);
 
 
             return {

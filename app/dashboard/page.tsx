@@ -2,22 +2,16 @@ import { getCurrentUser } from "@/lib/session";
 
 import { getLinksByUserId } from "@/src/repositories/link.repository";
 
-import { getRecentUserClickStats } from "@/src/repositories/click.repository";
-
 import { DashboardHero } from "@/components/dashboard/dashboard-hero";
 
 import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 
 import { LinksList } from "@/components/dashboard/links-list";
 
-import { LinkClickChart } from "@/components/dashboard/chart/link-click-chart";
-
 export default async function DashboardPage() {
   const user = await getCurrentUser();
 
   const links = await getLinksByUserId(user.id);
-
-  const clickStats = await getRecentUserClickStats(user.id);
 
   const totalClicks = links.reduce((sum, link) => sum + link.clickCount, 0);
 
@@ -40,8 +34,6 @@ export default async function DashboardPage() {
         totalClicks={totalClicks}
         activeLinks={activeLinks}
       />
-
-      <LinkClickChart data={clickStats} />
 
       <LinksList links={links} />
     </main>

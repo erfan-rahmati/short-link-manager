@@ -8,6 +8,8 @@ import { LogoutButton } from "@/components/logout-button";
 
 import { MobileDashboardMenu } from "./mobile-dashboard-menu";
 
+import { ThemeToggle } from "@/components/theme-toggle";
+
 type DashboardNavbarProps = {
   user?: {
     name?: string | null;
@@ -83,6 +85,8 @@ export function DashboardNavbar({ user }: DashboardNavbarProps) {
             md:flex
           "
         >
+          <ThemeToggle />
+
           <Link href="/dashboard">
             <Button variant="ghost">داشبورد</Button>
           </Link>

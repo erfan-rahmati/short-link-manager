@@ -57,6 +57,16 @@ export function CreateLinkForm() {
 
             <Input id="slug" name="slug" placeholder="example" required />
 
+            <p
+              className="
+      text-xs
+      text-muted-foreground
+    "
+            >
+              نام کوتاه لینک پس از ساخت قابل تغییر نیست و برای حفظ اعتبار
+              لینک‌های قبلی ثابت می‌ماند.
+            </p>
+
             {state.errors.slug && (
               <p className="text-sm text-destructive">{state.errors.slug[0]}</p>
             )}

@@ -23,8 +23,7 @@ export function LogoutButton() {
       disabled={pending}
       variant="outline"
       className="
-        w-full
-        justify-start
+        w-22
         text-destructive
         hover:bg-destructive/10
         hover:text-destructive

@@ -87,6 +87,32 @@ export async function deleteLink(
   return result[0] ?? null;
 }
 
+export async function updateLink(
+  id: string,
+  userId: string,
+  data: {
+    destinationUrl: string;
+    title: string | null;
+  }
+) {
+  const [updatedLink] = await db
+    .update(links)
+    .set({
+      destinationUrl: data.destinationUrl,
+      title: data.title,
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(links.id, id),
+        eq(links.userId, userId)
+      )
+    )
+    .returning();
+
+  return updatedLink ?? null;
+}
+
 export async function slugExists(
   slug: string
 ) {

@@ -1,4 +1,5 @@
 import { redirect, notFound } from "next/navigation";
+import { unstable_noStore } from "next/cache";
 
 import {
   getLinkBySlug,
@@ -14,6 +15,7 @@ export default async function RedirectPage({
     slug: string;
   }>;
 }) {
+  unstable_noStore();
   const { slug } = await params;
 
   const link = await getLinkBySlug(slug);
